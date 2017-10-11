@@ -16,13 +16,11 @@ void keyPressed() {
   int zoomed[][] = getPastPixels();  
   switch(key) {
   case 's':
-    zoomed = slidePixels(pastPixels, 0, width, height * 7/16, height * 9/16);
-    drawPixels(zoomed, width / 8, height * 7/16);
+    zoomed = slidePixels(pastPixels, 0, width, height * 31/64, height * 33/64);
+    drawPixels(zoomed, width / 16, height * 31/64);
     break;
   case 'z':
     zoomed = zoomPixels(pastPixels, 0, width, 0, height, width * 2, height * 2);
-    background(255);
-    loadPixels(); // reset pixels
     drawPixels(zoomed, -width / 2, -height/ 2);
     break;
   }
@@ -46,8 +44,8 @@ int [][] slidePixels(int pastPixels[][], int lx, int rx, int ly, int ry) {
   int [][] ra = new int[ry - ly][rx - lx];
   for (int y = ly; y < ry; y++) {
     for (int x = lx; x < rx; x++) {
-      int tempX = (int)map(x, lx, rx, 0, rx - lx);
-      int tempY = (int)map(y, ly, ry, 0, ry - ly);
+      int tempX = x - lx;
+      int tempY = y - ly;
       ra[tempY][tempX] = pastPixels[y][x];
     }
   }
