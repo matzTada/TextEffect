@@ -1,5 +1,5 @@
 void setup() {
-  size(1600, 1600);
+  size(800, 800);
   background(255);
 
   fill(0);
@@ -9,11 +9,34 @@ void setup() {
 
   //rect(0, 0, width/2, height);
 
-  int dice = 25;
+  int dice = 5;
+
+  text("hoge", 0, 0);
+  
   for (int y = 0; y < height/2; y += dice) {
     for (int x = 0; x < width/2; x += dice) {
       if ((x+y)% (dice*2)==0) {
-        movePixels(x, y, dice, dice, color(255, 0, 0), width/2 + x, height/2 + y);
+        movePixels(x, y, dice, dice, color(255), width/2 + x, height/2 + y);
+      }
+    }
+  }
+
+  text("hoge", 0, 0);
+  
+  for (int y = 0; y < height/2; y += dice) {
+    for (int x = 0; x < width/2; x += dice) {
+      if ((x)% (dice*2)==0) {
+        movePixels(x, y, dice, dice, color(255), x, height/2 + y);
+      }
+    }
+  }
+  
+    text("hoge", 0, 0);
+
+  for (int y = 0; y < height/2; y += dice) {
+    for (int x = 0; x < width/2; x += dice) {
+      if ((y)% (dice*2)==0) {
+        movePixels(x, y, dice, dice, color(255), width/2 + x, y);
       }
     }
   }
