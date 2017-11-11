@@ -4,14 +4,19 @@ void setup() {
 
   fill(0);
   textSize(width / 5);
-  textAlign(CENTER, CENTER);
-  text("hoge", width / 2, height /2);
-  
-  rect(0, 0, width/2, height);
+  textAlign(LEFT, TOP);
+  text("hoge", 0, 0);
 
-  drawPixels(copyPixels(getPastPixels(),0,height/2,100,100), width/2, height/2);
-  drawPixels(fillPixels(100, 100, color(255,0,0)), 0, height/2);
+  //rect(0, 0, width/2, height);
 
+  int dice = 25;
+  for (int y = 0; y < height/2; y += dice) {
+    for (int x = 0; x < width/2; x += dice) {
+      if ((x+y)% (dice*2)==0) {
+        movePixels(x, y, dice, dice, color(255, 0, 0), width/2 + x, height/2 + y);
+      }
+    }
+  }
 }
 
 void draw() {
@@ -33,7 +38,7 @@ void keyPressed() {
   redraw();
 }
 
-int [][] copyPixels(int pastPixels[][], int px, int py, int dx, int dy){
+int [][] copyPixels(int pastPixels[][], int px, int py, int dx, int dy) {
   int ra [][] = new int [dx][dy];
   for (int y = py; y < py + dy; y++) {
     for (int x = px; x < px + dx; x++) {
@@ -43,7 +48,7 @@ int [][] copyPixels(int pastPixels[][], int px, int py, int dx, int dy){
   return ra;
 }
 
-int [][] fillPixels(int dx, int dy, color c){
+int [][] fillPixels(int dx, int dy, color c) {
   int ra [][] = new int [dx][dy];
 
   for (int y = 0; y < dy; y++) {
@@ -52,6 +57,11 @@ int [][] fillPixels(int dx, int dy, color c){
     }
   }
   return ra;
+}
+
+void movePixels(int cx, int cy, int dx, int dy, color c, int px, int py) {
+  drawPixels(copyPixels(getPastPixels(), cx, cy, dx, dy), px, py);
+  drawPixels(fillPixels(dx, dy, c), cx, cy);
 }
 
 int [][] getPastPixels() {
