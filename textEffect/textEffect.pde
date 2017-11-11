@@ -6,6 +6,12 @@ void setup() {
   textSize(width / 5);
   textAlign(CENTER, CENTER);
   text("hoge", width / 2, height /2);
+  
+  rect(0, 0, width/2, height);
+
+  drawPixels(copyPixels(getPastPixels(),0,height/2,100,100), width/2, height/2);
+  drawPixels(fillPixels(100, 100, color(255,0,0)), 0, height/2);
+
 }
 
 void draw() {
@@ -27,6 +33,26 @@ void keyPressed() {
   redraw();
 }
 
+int [][] copyPixels(int pastPixels[][], int px, int py, int dx, int dy){
+  int ra [][] = new int [dx][dy];
+  for (int y = py; y < py + dy; y++) {
+    for (int x = px; x < px + dx; x++) {
+      ra[y-py][x-px] = pastPixels[y][x];
+    }
+  }
+  return ra;
+}
+
+int [][] fillPixels(int dx, int dy, color c){
+  int ra [][] = new int [dx][dy];
+
+  for (int y = 0; y < dy; y++) {
+    for (int x = 0; x < dx; x++) {
+      ra[y][x] = c;
+    }
+  }
+  return ra;
+}
 
 int [][] getPastPixels() {
   int ra [][] = new int [height][width];
