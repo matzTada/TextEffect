@@ -12,3 +12,13 @@
 * よっぱさんのページ<http://yoppa.org/geidai_media1_17/8243.html>
 * Processing textのページ<https://processing.org/reference/textFont_.html>
 * Processing 学習ノート　ピクセルを操作する<http://www.d-improvement.jp/learning/processing/2010-b/07.html>
+
+
+## memo
+
+* 文字で切り取る
+* boolean行列
+* LMM用ピクセル化
+* 特徴点出して(ここがむずいけど)LMMの大きさにしてからlineとかつかえば、アルゴリズム考えずにすむかも
+
+

@@ -1,64 +1,39 @@
 void setup() {
-  size(800, 800);
+  size(400, 400);
   background(255);
 
   fill(0);
-  textSize(width / 5);
+  textSize(width / 9);
   textAlign(LEFT, TOP);
-  text("hoge", 0, 0);
 
-  //rect(0, 0, width/2, height);
+  int cellSize = width / 8;
 
-  int dice = 5;
-
-  text("hoge", 0, 0);
-  
-  for (int y = 0; y < height/2; y += dice) {
-    for (int x = 0; x < width/2; x += dice) {
-      if ((x+y)% (dice*2)==0) {
-        movePixels(x, y, dice, dice, color(255), width/2 + x, height/2 + y);
-      }
+  int cnt = 0;
+  for (int y = 0; y < height/2; y += cellSize) {
+    for (int x = 0; x < width/2; x += cellSize) {
+      text("" + char('A' + cnt++), x, y);
     }
   }
 
-  text("hoge", 0, 0);
-  
-  for (int y = 0; y < height/2; y += dice) {
-    for (int x = 0; x < width/2; x += dice) {
-      if ((x)% (dice*2)==0) {
-        movePixels(x, y, dice, dice, color(255), x, height/2 + y);
-      }
-    }
-  }
-  
-    text("hoge", 0, 0);
+  int diceSize = cellSize/4;
+  println(diceSize);
 
-  for (int y = 0; y < height/2; y += dice) {
-    for (int x = 0; x < width/2; x += dice) {
-      if ((y)% (dice*2)==0) {
-        movePixels(x, y, dice, dice, color(255), width/2 + x, y);
-      }
-    }
-  }
+  drawPixels(copyPixelsAsStripedHorizontalPattern(getPastPixels(), 0, 0, width/2, height/2, diceSize), width/2, 0);
+  drawPixels(copyPixelsAsStripedVerticalPattern(getPastPixels(), 0, 0, width/2, height/2, diceSize), 0, height/2);
+  drawPixels(copyPixelsAsCheckeredPattern(getPastPixels(), 0, 0, width/2, height/2, diceSize), width/2, height/2);
 }
 
 void draw() {
 }
 
 void keyPressed() {  
-  int pastPixels[][] = getPastPixels();
-  int zoomed[][] = getPastPixels();  
   switch(key) {
-  case 's':
-    zoomed = slidePixels(pastPixels, 0, width, height * 31/64, height * 33/64);
-    drawPixels(zoomed, width / 16, height * 31/64);
-    break;
-  case 'z':
-    zoomed = zoomPixels(pastPixels, 0, width, 0, height, width * 2, height * 2);
-    drawPixels(zoomed, -width / 2, -height/ 2);
+  case 's': //save current Image 
+    String saveImageFileName = year() + "_" + month() + "_" + day() + "_" +hour() + "_" +minute() + "_" +second() + ".jpg";
+    println("========== saved image: " + saveImageFileName + " ==========");
+    save(saveImageFileName); //save image for offline
     break;
   }
-  redraw();
 }
 
 int [][] copyPixels(int pastPixels[][], int px, int py, int dx, int dy) {
@@ -70,6 +45,56 @@ int [][] copyPixels(int pastPixels[][], int px, int py, int dx, int dy) {
   }
   return ra;
 }
+
+int [][] copyPixelsAsStripedHorizontalPattern(int pastPixels[][], int px, int py, int dx, int dy, int w) {
+  int ra [][] = new int [dx][dy];
+  for (int celly = py; celly < py + dy; celly += w) {
+    for (int cellx = px; cellx < px + dx; cellx += w) {
+      if ((celly)% (w*2)==0) {
+        for (int y = celly; y < celly + w; y ++) {
+          for (int x = cellx; x < cellx + w; x ++) {
+            println(x, y, x-px, y-py);
+            ra[y-py][x-px] = pastPixels[y][x];
+          }
+        }
+      }
+    }
+  }
+  return ra;
+}
+
+int [][] copyPixelsAsStripedVerticalPattern(int pastPixels[][], int px, int py, int dx, int dy, int w) {
+  int ra [][] = new int [dx][dy];
+  for (int celly = py; celly < py + dy; celly += w) {
+    for (int cellx = px; cellx < px + dx; cellx += w) {
+      if ((cellx)% (w*2)==0) {
+        for (int y = celly; y < celly + w; y ++) {
+          for (int x = cellx; x < cellx + w; x ++) {
+            ra[y-py][x-px] = pastPixels[y][x];
+          }
+        }
+      }
+    }
+  }
+  return ra;
+}
+
+int [][] copyPixelsAsCheckeredPattern(int pastPixels[][], int px, int py, int dx, int dy, int w) {
+  int ra [][] = new int [dx][dy];
+  for (int celly = py; celly < py + dy; celly += w) {
+    for (int cellx = px; cellx < px + dx; cellx += w) {
+      if ((cellx+celly)% (w*2)==0) {
+        for (int y = celly; y < celly + w; y ++) {
+          for (int x = cellx; x < cellx + w; x ++) {
+            ra[y-py][x-px] = pastPixels[y][x];
+          }
+        }
+      }
+    }
+  }
+  return ra;
+}
+
 
 int [][] fillPixels(int dx, int dy, color c) {
   int ra [][] = new int [dx][dy];
