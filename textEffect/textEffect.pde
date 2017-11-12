@@ -1,3 +1,5 @@
+import java.util.*;
+
 void setup() {
   size(400, 400);
   background(255);
@@ -15,11 +17,14 @@ void setup() {
     }
   }
 
-  int diceSize = cellSize/4;
+  int diceSize = cellSize;
 
-  drawPixels(copyPixelsAsStripedHorizontalPattern(getPastPixels(), 0, 0, width/2, height/2, diceSize), width/2, 0);
-  drawPixels(copyPixelsAsStripedVerticalPattern(getPastPixels(), 0, 0, width/2, height/2, diceSize), 0, height/2);
-  drawPixels(copyPixelsAsCheckeredPattern(getPastPixels(), 0, 0, width/2, height/2, diceSize), width/2, height/2);
+  //drawPixels(copyPixelsAsStripedHorizontalPattern(getPastPixels(), 0, 0, width/2, height/2, diceSize), width/2, 0);
+  //drawPixels(copyPixelsAsStripedVerticalPattern(getPastPixels(), 0, 0, width/2, height/2, diceSize), 0, height/2);
+  //drawPixels(copyPixelsAsCheckeredPattern(getPastPixels(), 0, 0, width/2, height/2, diceSize), width/2, height/2);
+  drawPixels(copyPixelsAsRandomizedPattern(getPastPixels(), 0, 0, width/2, height/2, 4, 4), width/2, 0);
+  drawPixels(copyPixelsAsRandomizedPattern(getPastPixels(), 0, 0, width/2, height/2, 4, 4), 0, height/2);
+  drawPixels(copyPixelsAsRandomizedPattern(getPastPixels(), 0, 0, width/2, height/2, 4, 4), width/2, height/2);
 }
 
 void draw() {
@@ -90,6 +95,41 @@ int [][] copyPixelsAsCheckeredPattern(int pastPixels[][], int px, int py, int dx
       }
     }
   }
+  return ra;
+}
+int [][] copyPixelsAsRandomizedPattern(int pastPixels[][], int px, int py, int dx, int dy, int numx, int numy) {
+  int wx = dx / numx;
+  int wy = dy / numy;
+  ArrayList<int [][]> cells = new ArrayList<int [][]>();
+  for (int celly = py; celly < py + dy; celly += wy) {
+    for (int cellx = px; cellx < px + dx; cellx += wx) {
+      int ta [][] = new int [wx][wy];    
+      for (int y = celly; y < celly + wy && y < py + dy; y ++) {
+        for (int x = cellx; x < cellx + wx && x < px + dx; x ++) {
+          ta[y-celly][x-cellx] = pastPixels[y][x];
+        }
+      }
+      cells.add(ta);
+    }
+  }
+
+  Collections.shuffle(cells);
+
+  int ra [][] = new int [dx][dy];
+
+  int cnt = 0;
+  for (int celly = py; celly < py + dy; celly += wy) {
+    for (int cellx = px; cellx < px + dx; cellx += wx) {
+      int ta [][] = cells.get(cnt);
+      for (int y = 0; y < wy; y ++) {
+        for (int x = 0; x < wx; x ++) {
+          ra[y+celly][x+cellx] = ta[y][x];
+        }
+      }
+      cnt++;
+    }
+  }  
+
   return ra;
 }
 
