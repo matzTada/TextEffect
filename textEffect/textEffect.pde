@@ -16,7 +16,6 @@ void setup() {
   }
 
   int diceSize = cellSize/4;
-  println(diceSize);
 
   drawPixels(copyPixelsAsStripedHorizontalPattern(getPastPixels(), 0, 0, width/2, height/2, diceSize), width/2, 0);
   drawPixels(copyPixelsAsStripedVerticalPattern(getPastPixels(), 0, 0, width/2, height/2, diceSize), 0, height/2);
@@ -51,9 +50,8 @@ int [][] copyPixelsAsStripedHorizontalPattern(int pastPixels[][], int px, int py
   for (int celly = py; celly < py + dy; celly += w) {
     for (int cellx = px; cellx < px + dx; cellx += w) {
       if ((celly)% (w*2)==0) {
-        for (int y = celly; y < celly + w; y ++) {
-          for (int x = cellx; x < cellx + w; x ++) {
-            println(x, y, x-px, y-py);
+        for (int y = celly; y < celly + w && y < py + dy; y ++) {
+          for (int x = cellx; x < cellx + w && x < px + dx; x ++) {
             ra[y-py][x-px] = pastPixels[y][x];
           }
         }
@@ -68,8 +66,8 @@ int [][] copyPixelsAsStripedVerticalPattern(int pastPixels[][], int px, int py, 
   for (int celly = py; celly < py + dy; celly += w) {
     for (int cellx = px; cellx < px + dx; cellx += w) {
       if ((cellx)% (w*2)==0) {
-        for (int y = celly; y < celly + w; y ++) {
-          for (int x = cellx; x < cellx + w; x ++) {
+        for (int y = celly; y < celly + w && y < py + dy; y ++) {
+          for (int x = cellx; x < cellx + w && x < px + dx; x ++) {
             ra[y-py][x-px] = pastPixels[y][x];
           }
         }
@@ -84,8 +82,8 @@ int [][] copyPixelsAsCheckeredPattern(int pastPixels[][], int px, int py, int dx
   for (int celly = py; celly < py + dy; celly += w) {
     for (int cellx = px; cellx < px + dx; cellx += w) {
       if ((cellx+celly)% (w*2)==0) {
-        for (int y = celly; y < celly + w; y ++) {
-          for (int x = cellx; x < cellx + w; x ++) {
+        for (int y = celly; y < celly + w && y < py + dy; y ++) {
+          for (int x = cellx; x < cellx + w && x < px + dx; x ++) {
             ra[y-py][x-px] = pastPixels[y][x];
           }
         }
