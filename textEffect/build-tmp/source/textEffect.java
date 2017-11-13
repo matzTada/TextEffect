@@ -24,7 +24,7 @@ public void setup() {
   size(400, 400);
   background(color(255, 255, 255, 255));
 
-  int cellSize = width / 4;
+  int cellSize = width / 8;
   int cnt = 0;
   textAlign(CENTER, CENTER);
   textSize(cellSize);
@@ -45,12 +45,22 @@ public void setup() {
   // drawPixels(copyPixelsAsRandomizedPattern(getPastPixels(), 0, 0, width/2, height/2, 8, 8), 0, height/2, color(255, 255, 255));
   // drawPixels(copyPixelsAsRandomizedPattern(getPastPixels(), 0, 0, width/2, height/2, 16, 16), width/2, height/2, color(255, 255, 255));
 
-  cellSize = width / 16;
+  cellSize = width / 8;
+
+  ArrayList<int []> poss = new ArrayList<int []>();
+  for(int j = 0; j < height; j += cellSize){
+    for(int i = 0; i < width; i += cellSize){
+      poss.add(new int[]{i, j});
+    }
+  }
+  Collections.shuffle(poss);
+
   for(int j = 0; j < height; j += cellSize){
     for(int i = 0; i < width; i += cellSize){
       momos.add(new Movable());
       momos.get(momos.size() - 1).setSprite(copyPixels(getPastPixels(), i, j, cellSize, cellSize));
-      momos.get(momos.size() - 1).setCurrentPos((int)random(0, width), (int)random(0, height));
+      momos.get(momos.size() - 1).setCurrentPos(poss.get(poss.size()-1)[0], poss.get(poss.size()-1)[1]);
+      poss.remove(poss.size() - 1);
       momos.get(momos.size() - 1).setTargetPos(i, j);
     }
   }
@@ -59,7 +69,8 @@ public void setup() {
 public void draw() {
   background(color(255, 255, 255, 255));
   for(Movable tempmo : momos){  
-    tempmo.moveManhattanStep(1);
+    // tempmo.moveManhattanStep(10);
+    tempmo.moveBlockManhattanStep(5, width/16);
     tempmo.show(color(255, 255, 255, 255));
   }
 }
@@ -234,6 +245,7 @@ class Movable{
   int x, y, ex, ey;
   boolean moveFlag;
   int [][] sprite;
+  int vx, vy;
 
   public void setSprite(int [][] _sprite){
     sprite = new int[_sprite.length][_sprite[0].length];
@@ -273,6 +285,35 @@ class Movable{
         moveFlag = false;
         return;
       }
+    }
+  }
+
+  public void moveBlockManhattanStep(int _s, int _cell){
+    for(int s = 0; s < _s; s++){
+      if(x == ex && y == ey){
+        moveFlag = false;
+        return;
+      }
+      else if(x == ex){
+        vx = 0;
+        vy = 1 * (ey - y) / abs(ey - y);       
+      }
+      else if(y == ey){
+        vx = 1 * (ex - x) / abs(ex - x);
+        vy = 0;
+      }
+      else if(x % _cell == 0 || y % _cell == 0){
+        if(random(0, 100) > 50){
+          vx = 1 * (ex - x) / abs(ex - x);
+          vy = 0;
+        }else{
+          vx = 0;
+          vy = 1 * (ey - y) / abs(ey - y);
+        }
+      }
+
+      x += vx;
+      y += vy;        
     }
   }
 

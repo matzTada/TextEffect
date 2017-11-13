@@ -6,7 +6,7 @@ void setup() {
   size(400, 400);
   background(color(255, 255, 255, 255));
 
-  int cellSize = width / 4;
+  int cellSize = width / 8;
   int cnt = 0;
   textAlign(CENTER, CENTER);
   textSize(cellSize);
@@ -27,12 +27,22 @@ void setup() {
   // drawPixels(copyPixelsAsRandomizedPattern(getPastPixels(), 0, 0, width/2, height/2, 8, 8), 0, height/2, color(255, 255, 255));
   // drawPixels(copyPixelsAsRandomizedPattern(getPastPixels(), 0, 0, width/2, height/2, 16, 16), width/2, height/2, color(255, 255, 255));
 
-  cellSize = width / 16;
+  cellSize = width / 8;
+
+  ArrayList<int []> poss = new ArrayList<int []>();
+  for(int j = 0; j < height; j += cellSize){
+    for(int i = 0; i < width; i += cellSize){
+      poss.add(new int[]{i, j});
+    }
+  }
+  Collections.shuffle(poss);
+
   for(int j = 0; j < height; j += cellSize){
     for(int i = 0; i < width; i += cellSize){
       momos.add(new Movable());
       momos.get(momos.size() - 1).setSprite(copyPixels(getPastPixels(), i, j, cellSize, cellSize));
-      momos.get(momos.size() - 1).setCurrentPos((int)random(0, width), (int)random(0, height));
+      momos.get(momos.size() - 1).setCurrentPos(poss.get(poss.size()-1)[0], poss.get(poss.size()-1)[1]);
+      poss.remove(poss.size() - 1);
       momos.get(momos.size() - 1).setTargetPos(i, j);
     }
   }
@@ -41,7 +51,8 @@ void setup() {
 void draw() {
   background(color(255, 255, 255, 255));
   for(Movable tempmo : momos){  
-    tempmo.moveManhattanStep(1);
+    // tempmo.moveManhattanStep(10);
+    tempmo.moveBlockManhattanStep(5, width/16);
     tempmo.show(color(255, 255, 255, 255));
   }
 }
