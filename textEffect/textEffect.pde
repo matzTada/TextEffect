@@ -1,33 +1,33 @@
 import java.util.*;
 
 void setup() {
-  size(400, 400);
+  size(800, 800);
   background(255);
 
-  fill(0);
-  textSize(width / 9);
-  textAlign(LEFT, TOP);
-
-  int cellSize = width / 8;
-
+  int cellSize = width / 4;
   int cnt = 0;
+  textAlign(CENTER, CENTER);
+  textSize(cellSize);
+  colorMode(HSB, 360, 100, 100);
   for (int y = 0; y < height/2; y += cellSize) {
     for (int x = 0; x < width/2; x += cellSize) {
-      text("" + char('A' + cnt++), x, y);
+      fill(random(0, 360), 100, 100);
+      text("" + char('A' + cnt++), x + cellSize / 2, y + cellSize / 2);
     }
   }
-
-  int diceSize = cellSize;
-
-  //drawPixels(copyPixelsAsStripedHorizontalPattern(getPastPixels(), 0, 0, width/2, height/2, diceSize), width/2, 0);
-  //drawPixels(copyPixelsAsStripedVerticalPattern(getPastPixels(), 0, 0, width/2, height/2, diceSize), 0, height/2);
-  //drawPixels(copyPixelsAsCheckeredPattern(getPastPixels(), 0, 0, width/2, height/2, diceSize), width/2, height/2);
-  drawPixels(copyPixelsAsRandomizedPattern(getPastPixels(), 0, 0, width/2, height/2, 4, 4), width/2, 0);
-  drawPixels(copyPixelsAsRandomizedPattern(getPastPixels(), 0, 0, width/2, height/2, 4, 4), 0, height/2);
-  drawPixels(copyPixelsAsRandomizedPattern(getPastPixels(), 0, 0, width/2, height/2, 4, 4), width/2, height/2);
+  colorMode(RGB);
 }
 
+int cellNum = 32;
 void draw() {
+  fill(255);
+  rect(width/2, 0, width/2, height/2);
+  fill(0);
+  text(cellNum, width * 3 / 4, height * 1 / 4);
+  drawPixels(copyPixelsAsRandomizedPattern(getPastPixels(), 0, 0, width/2, height/2, cellNum, cellNum), width/2, height/2);
+  cellNum /= 2;
+  if (cellNum < 1) cellNum = 32;
+  delay(500);
 }
 
 void keyPressed() {  
@@ -103,7 +103,7 @@ int [][] copyPixelsAsRandomizedPattern(int pastPixels[][], int px, int py, int d
   ArrayList<int [][]> cells = new ArrayList<int [][]>();
   for (int celly = py; celly < py + dy; celly += wy) {
     for (int cellx = px; cellx < px + dx; cellx += wx) {
-      int ta [][] = new int [wx][wy];    
+      int ta [][] = new int [wy][wx];    
       for (int y = celly; y < celly + wy && y < py + dy; y ++) {
         for (int x = cellx; x < cellx + wx && x < px + dx; x ++) {
           ta[y-celly][x-cellx] = pastPixels[y][x];
@@ -121,8 +121,8 @@ int [][] copyPixelsAsRandomizedPattern(int pastPixels[][], int px, int py, int d
   for (int celly = py; celly < py + dy; celly += wy) {
     for (int cellx = px; cellx < px + dx; cellx += wx) {
       int ta [][] = cells.get(cnt);
-      for (int y = 0; y < wy; y ++) {
-        for (int x = 0; x < wx; x ++) {
+      for (int y = 0; y < wy && y+celly < dy; y ++) {
+        for (int x = 0; x < wx && x + cellx < dx; x ++) {
           ra[y+celly][x+cellx] = ta[y][x];
         }
       }
