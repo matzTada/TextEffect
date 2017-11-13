@@ -16,18 +16,14 @@ void setup() {
     }
   }
   colorMode(RGB);
+
+  drawPixels(copyPixelsAsRandomizedPattern(getPastPixels(), 0, 0, width/2, height/2, 4, 4), width/2, 0);
+  drawPixels(copyPixelsAsRandomizedPattern(getPastPixels(), 0, 0, width/2, height/2, 8, 8), 0, height/2);
+  drawPixels(copyPixelsAsRandomizedPattern(getPastPixels(), 0, 0, width/2, height/2, 16, 16), width/2, height/2);
 }
 
 int cellNum = 32;
 void draw() {
-  fill(255);
-  rect(width/2, 0, width/2, height/2);
-  fill(0);
-  text(cellNum, width * 3 / 4, height * 1 / 4);
-  drawPixels(copyPixelsAsRandomizedPattern(getPastPixels(), 0, 0, width/2, height/2, cellNum, cellNum), width/2, height/2);
-  cellNum /= 2;
-  if (cellNum < 1) cellNum = 32;
-  delay(500);
 }
 
 void keyPressed() {  
