@@ -37,18 +37,19 @@ public void setup() {
   }
   colorMode(RGB, 256);
 
-  // drawPixels(copyPixelsAsRandomizedPattern(getPastPixels(), 0, 0, width/2, height/2, 4, 4), width/2, 0);
-  // drawPixels(copyPixelsAsRandomizedPattern(getPastPixels(), 0, 0, width/2, height/2, 8, 8), 0, height/2);
-  // drawPixels(copyPixelsAsRandomizedPattern(getPastPixels(), 0, 0, width/2, height/2, 16, 16), width/2, height/2);
+  // drawPixels(copyPixelsAsRandomizedPattern(getPastPixels(), 0, 0, width/2, height/2, 4, 4), width/2, 0, color(255, 255, 255));
+  // drawPixels(copyPixelsAsRandomizedPattern(getPastPixels(), 0, 0, width/2, height/2, 8, 8), 0, height/2, color(255, 255, 255));
+  // drawPixels(copyPixelsAsRandomizedPattern(getPastPixels(), 0, 0, width/2, height/2, 16, 16), width/2, height/2, color(255, 255, 255));
 
   momo.setSprite(copyPixels(getPastPixels(), 0, 0, 200, 200));
+  momo.setCurrentPos(0, 0);
   momo.setTargetPos(600, 600);
 }
 
 public void draw() {
   background(255);
   momo.moveManhattanStep(10);
-  momo.show();
+  momo.show(color(255, 255, 255));
   delay(10);
 }
 
@@ -167,11 +168,6 @@ public int [][] fillPixels(int dx, int dy, int c) {
   return ra;
 }
 
-public void movePixels(int cx, int cy, int dx, int dy, int c, int px, int py) {
-  drawPixels(copyPixels(getPastPixels(), cx, cy, dx, dy), px, py);
-  drawPixels(fillPixels(dx, dy, c), cx, cy);
-}
-
 public int [][] getPastPixels() {
   int ra [][] = new int [height][width];
   loadPixels();
@@ -208,7 +204,7 @@ public int [][] zoomPixels(int pastPixels[][], int lx, int rx, int ly, int ry, i
   return ra;
 }
 
-public void drawPixels(int pastPixels[][], int px, int py) {
+public void drawPixels(int pastPixels[][], int px, int py, int bgColor) {
   loadPixels();
   for (int y = 0; y < pastPixels.length; y++) {
     for (int x = 0; x < pastPixels[0].length; x++) {
@@ -216,13 +212,15 @@ public void drawPixels(int pastPixels[][], int px, int py) {
       int tempY = y + py;
       if (tempX < 0 || width <= tempX) continue;
       if (tempY < 0 || height <= tempY) continue;
-      pixels[tempY * width + tempX] = pastPixels[y][x];
+      if(pastPixels[y][x] != bgColor){
+        pixels[tempY * width + tempX] = pastPixels[y][x];
+      }
     }
   }
   updatePixels();
 }
 class Movable{
-  int x, y, sx, sy, ex, ey;
+  int x, y, ex, ey;
   boolean moveFlag;
   int [][] sprite;
 
@@ -233,6 +231,11 @@ class Movable{
         sprite[j][i] = _sprite[j][i];
       }
     }
+  }
+
+  public void setCurrentPos(int _x, int _y){
+    x = _x;
+    y = _y;
   }
 
   public void setTargetPos(int _ex, int _ey){
@@ -262,8 +265,8 @@ class Movable{
     }
   }
 
-  public void show(){
-    drawPixels(sprite, x, y);
+  public void show(int _bgColor){
+    drawPixels(sprite, x, y, _bgColor);
   }
 }
   static public void main(String[] passedArgs) {

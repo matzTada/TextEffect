@@ -1,5 +1,5 @@
 class Movable{
-  int x, y, sx, sy, ex, ey;
+  int x, y, ex, ey;
   boolean moveFlag;
   int [][] sprite;
 
@@ -10,6 +10,11 @@ class Movable{
         sprite[j][i] = _sprite[j][i];
       }
     }
+  }
+
+  void setCurrentPos(int _x, int _y){
+    x = _x;
+    y = _y;
   }
 
   void setTargetPos(int _ex, int _ey){
@@ -39,7 +44,7 @@ class Movable{
     }
   }
 
-  void show(){
-    drawPixels(sprite, x, y);
+  void show(color _bgColor){
+    drawPixels(sprite, x, y, _bgColor);
   }
 }

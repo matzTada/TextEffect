@@ -19,18 +19,19 @@ void setup() {
   }
   colorMode(RGB, 256);
 
-  // drawPixels(copyPixelsAsRandomizedPattern(getPastPixels(), 0, 0, width/2, height/2, 4, 4), width/2, 0);
-  // drawPixels(copyPixelsAsRandomizedPattern(getPastPixels(), 0, 0, width/2, height/2, 8, 8), 0, height/2);
-  // drawPixels(copyPixelsAsRandomizedPattern(getPastPixels(), 0, 0, width/2, height/2, 16, 16), width/2, height/2);
+  // drawPixels(copyPixelsAsRandomizedPattern(getPastPixels(), 0, 0, width/2, height/2, 4, 4), width/2, 0, color(255, 255, 255));
+  // drawPixels(copyPixelsAsRandomizedPattern(getPastPixels(), 0, 0, width/2, height/2, 8, 8), 0, height/2, color(255, 255, 255));
+  // drawPixels(copyPixelsAsRandomizedPattern(getPastPixels(), 0, 0, width/2, height/2, 16, 16), width/2, height/2, color(255, 255, 255));
 
   momo.setSprite(copyPixels(getPastPixels(), 0, 0, 200, 200));
+  momo.setCurrentPos(0, 0);
   momo.setTargetPos(600, 600);
 }
 
 void draw() {
   background(255);
   momo.moveManhattanStep(10);
-  momo.show();
+  momo.show(color(255, 255, 255));
   delay(10);
 }
 
@@ -149,11 +150,6 @@ int [][] fillPixels(int dx, int dy, color c) {
   return ra;
 }
 
-void movePixels(int cx, int cy, int dx, int dy, color c, int px, int py) {
-  drawPixels(copyPixels(getPastPixels(), cx, cy, dx, dy), px, py);
-  drawPixels(fillPixels(dx, dy, c), cx, cy);
-}
-
 int [][] getPastPixels() {
   int ra [][] = new int [height][width];
   loadPixels();
@@ -190,7 +186,7 @@ int [][] zoomPixels(int pastPixels[][], int lx, int rx, int ly, int ry, int w, i
   return ra;
 }
 
-void drawPixels(int pastPixels[][], int px, int py) {
+void drawPixels(int pastPixels[][], int px, int py, color bgColor) {
   loadPixels();
   for (int y = 0; y < pastPixels.length; y++) {
     for (int x = 0; x < pastPixels[0].length; x++) {
@@ -198,7 +194,9 @@ void drawPixels(int pastPixels[][], int px, int py) {
       int tempY = y + py;
       if (tempX < 0 || width <= tempX) continue;
       if (tempY < 0 || height <= tempY) continue;
-      pixels[tempY * width + tempX] = pastPixels[y][x];
+      if(pastPixels[y][x] != bgColor){
+        pixels[tempY * width + tempX] = pastPixels[y][x];
+      }
     }
   }
   updatePixels();
