@@ -14,7 +14,7 @@ class Movable{
 
   void setCurrentPos(int _x, int _y){
     x = _x;
-    y = _y;
+    y =  _y;
   }
 
   void setTargetPos(int _ex, int _ey){

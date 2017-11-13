@@ -1,38 +1,49 @@
 import java.util.*;
 
-Movable momo = new Movable();
+ArrayList<Movable> momos = new ArrayList<Movable>();
 
 void setup() {
-  size(800, 800);
-  background(255);
+  size(400, 400);
+  background(color(255, 255, 255, 255));
 
   int cellSize = width / 4;
   int cnt = 0;
   textAlign(CENTER, CENTER);
   textSize(cellSize);
   colorMode(HSB, 360, 100, 100);
-  for (int y = 0; y < height/2; y += cellSize) {
-    for (int x = 0; x < width/2; x += cellSize) {
+  for (int y = 0; y < height; y += cellSize) {
+    for (int x = 0; x < width; x += cellSize) {
       fill(random(0, 360), 100, 100);
       text("" + char('A' + cnt++), x + cellSize / 2, y + cellSize / 2);
     }
   }
   colorMode(RGB, 256);
 
+  loadPixels();
+  println(pixels[0 * width + 0]);
+  println(color(255,255,255,255));
+
   // drawPixels(copyPixelsAsRandomizedPattern(getPastPixels(), 0, 0, width/2, height/2, 4, 4), width/2, 0, color(255, 255, 255));
   // drawPixels(copyPixelsAsRandomizedPattern(getPastPixels(), 0, 0, width/2, height/2, 8, 8), 0, height/2, color(255, 255, 255));
   // drawPixels(copyPixelsAsRandomizedPattern(getPastPixels(), 0, 0, width/2, height/2, 16, 16), width/2, height/2, color(255, 255, 255));
 
-  momo.setSprite(copyPixels(getPastPixels(), 0, 0, 200, 200));
-  momo.setCurrentPos(0, 0);
-  momo.setTargetPos(600, 600);
+  cellSize = width / 16;
+  for(int j = 0; j < height; j += cellSize){
+    for(int i = 0; i < width; i += cellSize){
+      momos.add(new Movable());
+      momos.get(momos.size() - 1).setSprite(copyPixels(getPastPixels(), i, j, cellSize, cellSize));
+      momos.get(momos.size() - 1).setCurrentPos((int)random(0, width), (int)random(0, height));
+      momos.get(momos.size() - 1).setTargetPos(i, j);
+    }
+  }
 }
 
 void draw() {
-  background(255);
-  momo.moveManhattanStep(10);
-  momo.show(color(255, 255, 255));
-  delay(10);
+  background(color(255, 255, 255, 255));
+  for(Movable tempmo : momos){  
+    tempmo.moveManhattanStep(1);
+    tempmo.show(color(255, 255, 255, 255));
+  }
 }
 
 void keyPressed() {  
@@ -194,7 +205,7 @@ void drawPixels(int pastPixels[][], int px, int py, color bgColor) {
       int tempY = y + py;
       if (tempX < 0 || width <= tempX) continue;
       if (tempY < 0 || height <= tempY) continue;
-      if(pastPixels[y][x] != bgColor){
+      if(pastPixels[y][x] != -1){        
         pixels[tempY * width + tempX] = pastPixels[y][x];
       }
     }
