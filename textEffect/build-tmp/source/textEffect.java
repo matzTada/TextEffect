@@ -24,7 +24,7 @@ public void setup() {
   size(400, 400);
   background(color(255, 255, 255, 255));
 
-  int cellSize = width / 8;
+  int cellSize = width / 4;
   int cnt = 0;
   textAlign(CENTER, CENTER);
   textSize(cellSize);
@@ -57,11 +57,15 @@ public void setup() {
 
   for(int j = 0; j < height; j += cellSize){
     for(int i = 0; i < width; i += cellSize){
-      momos.add(new Movable());
-      momos.get(momos.size() - 1).setSprite(copyPixels(getPastPixels(), i, j, cellSize, cellSize));
-      momos.get(momos.size() - 1).setCurrentPos(poss.get(poss.size()-1)[0], poss.get(poss.size()-1)[1]);
+      int targetx = poss.get(poss.size()-1)[0];
+      int targety = poss.get(poss.size()-1)[1];
       poss.remove(poss.size() - 1);
-      momos.get(momos.size() - 1).setTargetPos(i, j);
+
+      Movable tempmo = new Movable();
+      tempmo.setSprite(copyPixels(getPastPixels(), i, j, cellSize, cellSize));
+      tempmo.setCurrentPos(targetx, targety);
+      tempmo.setTargetPos(i, j);
+      momos.add(tempmo);
     }
   }
 }
@@ -69,8 +73,8 @@ public void setup() {
 public void draw() {
   background(color(255, 255, 255, 255));
   for(Movable tempmo : momos){  
-    // tempmo.moveManhattanStep(10);
-    tempmo.moveBlockManhattanStep(5, width/16);
+    // tempmo.moveManhattanStep(tempmo.initDistance / 50, width/8);
+    tempmo.moveManhattanStep(tempmo.getCurrentDistance() / 50, width/8);
     tempmo.show(color(255, 255, 255, 255));
   }
 }
@@ -246,6 +250,7 @@ class Movable{
   boolean moveFlag;
   int [][] sprite;
   int vx, vy;
+  int initDistance;
 
   public void setSprite(int [][] _sprite){
     sprite = new int[_sprite.length][_sprite[0].length];
@@ -264,45 +269,30 @@ class Movable{
   public void setTargetPos(int _ex, int _ey){
     ex = _ex;
     ey = _ey;
+    initDistance = abs(ex - x) + abs (ey - y);
     moveFlag = true;
   }
 
-  public void moveManhattanStep(int _s){
-    for(int s = 0; s < _s; s++){
-      if((ex - x != 0) && (ey - y != 0)){
-        if(random(0, 100) > 50){
-          x += 1 * (ex - x) / abs(ex - x);
-        }else{
-          y += 1 * (ey - y) / abs(ey - y);
-        }
-      }
-      else if((ex - x == 0) && (ey - y != 0)){
-        y += 1 * (ey - y) / abs(ey - y);
-      } 
-      else if((ey - y == 0) && (ex - x != 0)){
-        x += 1 * (ex - x) / abs(ex - x);
-      }else{
-        moveFlag = false;
-        return;
-      }
-    }
+  public int getCurrentDistance(){
+    return abs(ex - x) + abs (ey - y);
   }
 
-  public void moveBlockManhattanStep(int _s, int _cell){
+  public void moveManhattanStep(int _s, int _block){
+    if(_s < 1) _s = 1; 
     for(int s = 0; s < _s; s++){
       if(x == ex && y == ey){
         moveFlag = false;
         return;
       }
-      else if(x == ex){
+      else if(x == ex && y != ey){
         vx = 0;
         vy = 1 * (ey - y) / abs(ey - y);       
       }
-      else if(y == ey){
+      else if(x != ex && y == ey){
         vx = 1 * (ex - x) / abs(ex - x);
         vy = 0;
       }
-      else if(x % _cell == 0 || y % _cell == 0){
+      else{
         if(random(0, 100) > 50){
           vx = 1 * (ex - x) / abs(ex - x);
           vy = 0;

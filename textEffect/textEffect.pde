@@ -6,7 +6,7 @@ void setup() {
   size(400, 400);
   background(color(255, 255, 255, 255));
 
-  int cellSize = width / 8;
+  int cellSize = width / 4;
   int cnt = 0;
   textAlign(CENTER, CENTER);
   textSize(cellSize);
@@ -39,11 +39,15 @@ void setup() {
 
   for(int j = 0; j < height; j += cellSize){
     for(int i = 0; i < width; i += cellSize){
-      momos.add(new Movable());
-      momos.get(momos.size() - 1).setSprite(copyPixels(getPastPixels(), i, j, cellSize, cellSize));
-      momos.get(momos.size() - 1).setCurrentPos(poss.get(poss.size()-1)[0], poss.get(poss.size()-1)[1]);
+      int targetx = poss.get(poss.size()-1)[0];
+      int targety = poss.get(poss.size()-1)[1];
       poss.remove(poss.size() - 1);
-      momos.get(momos.size() - 1).setTargetPos(i, j);
+
+      Movable tempmo = new Movable();
+      tempmo.setSprite(copyPixels(getPastPixels(), i, j, cellSize, cellSize));
+      tempmo.setCurrentPos(targetx, targety);
+      tempmo.setTargetPos(i, j);
+      momos.add(tempmo);
     }
   }
 }
@@ -51,8 +55,8 @@ void setup() {
 void draw() {
   background(color(255, 255, 255, 255));
   for(Movable tempmo : momos){  
-    // tempmo.moveManhattanStep(10);
-    tempmo.moveBlockManhattanStep(5, width/16);
+    // tempmo.moveManhattanStep(tempmo.initDistance / 50, width/8);
+    tempmo.moveManhattanStep(tempmo.getCurrentDistance() / 50, width/8);
     tempmo.show(color(255, 255, 255, 255));
   }
 }
