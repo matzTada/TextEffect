@@ -1,8 +1,26 @@
-import java.util.*;
+import processing.core.*; 
+import processing.data.*; 
+import processing.event.*; 
+import processing.opengl.*; 
+
+import java.util.*; 
+
+import java.util.HashMap; 
+import java.util.ArrayList; 
+import java.io.File; 
+import java.io.BufferedReader; 
+import java.io.PrintWriter; 
+import java.io.InputStream; 
+import java.io.OutputStream; 
+import java.io.IOException; 
+
+public class textEffect extends PApplet {
+
+
 
 Movable momo = new Movable();
 
-void setup() {
+public void setup() {
   size(800, 800);
   background(255);
 
@@ -14,7 +32,7 @@ void setup() {
   for (int y = 0; y < height/2; y += cellSize) {
     for (int x = 0; x < width/2; x += cellSize) {
       fill(random(0, 360), 100, 100);
-      text("" + char('A' + cnt++), x + cellSize / 2, y + cellSize / 2);
+      text("" + PApplet.parseChar('A' + cnt++), x + cellSize / 2, y + cellSize / 2);
     }
   }
   colorMode(RGB, 256);
@@ -27,14 +45,14 @@ void setup() {
   momo.setTargetPos(600, 600);
 }
 
-void draw() {
+public void draw() {
   background(255);
   momo.moveManhattanStep(10);
   momo.show();
   delay(10);
 }
 
-void keyPressed() {  
+public void keyPressed() {  
   switch(key) {
   case 's': //save current Image 
     String saveImageFileName = year() + "_" + month() + "_" + day() + "_" +hour() + "_" +minute() + "_" +second() + ".jpg";
@@ -44,7 +62,7 @@ void keyPressed() {
   }
 }
 
-int [][] copyPixels(int pastPixels[][], int px, int py, int dx, int dy) {
+public int [][] copyPixels(int pastPixels[][], int px, int py, int dx, int dy) {
   int ra [][] = new int [dx][dy];
   for (int y = py; y < py + dy; y++) {
     for (int x = px; x < px + dx; x++) {
@@ -54,7 +72,7 @@ int [][] copyPixels(int pastPixels[][], int px, int py, int dx, int dy) {
   return ra;
 }
 
-int [][] copyPixelsAsStripedHorizontalPattern(int pastPixels[][], int px, int py, int dx, int dy, int w) {
+public int [][] copyPixelsAsStripedHorizontalPattern(int pastPixels[][], int px, int py, int dx, int dy, int w) {
   int ra [][] = new int [dx][dy];
   for (int celly = py; celly < py + dy; celly += w) {
     for (int cellx = px; cellx < px + dx; cellx += w) {
@@ -70,7 +88,7 @@ int [][] copyPixelsAsStripedHorizontalPattern(int pastPixels[][], int px, int py
   return ra;
 }
 
-int [][] copyPixelsAsStripedVerticalPattern(int pastPixels[][], int px, int py, int dx, int dy, int w) {
+public int [][] copyPixelsAsStripedVerticalPattern(int pastPixels[][], int px, int py, int dx, int dy, int w) {
   int ra [][] = new int [dx][dy];
   for (int celly = py; celly < py + dy; celly += w) {
     for (int cellx = px; cellx < px + dx; cellx += w) {
@@ -86,7 +104,7 @@ int [][] copyPixelsAsStripedVerticalPattern(int pastPixels[][], int px, int py, 
   return ra;
 }
 
-int [][] copyPixelsAsCheckeredPattern(int pastPixels[][], int px, int py, int dx, int dy, int w) {
+public int [][] copyPixelsAsCheckeredPattern(int pastPixels[][], int px, int py, int dx, int dy, int w) {
   int ra [][] = new int [dx][dy];
   for (int celly = py; celly < py + dy; celly += w) {
     for (int cellx = px; cellx < px + dx; cellx += w) {
@@ -101,7 +119,7 @@ int [][] copyPixelsAsCheckeredPattern(int pastPixels[][], int px, int py, int dx
   }
   return ra;
 }
-int [][] copyPixelsAsRandomizedPattern(int pastPixels[][], int px, int py, int dx, int dy, int numx, int numy) {
+public int [][] copyPixelsAsRandomizedPattern(int pastPixels[][], int px, int py, int dx, int dy, int numx, int numy) {
   int wx = dx / numx;
   int wy = dy / numy;
   ArrayList<int [][]> cells = new ArrayList<int [][]>();
@@ -138,7 +156,7 @@ int [][] copyPixelsAsRandomizedPattern(int pastPixels[][], int px, int py, int d
 }
 
 
-int [][] fillPixels(int dx, int dy, color c) {
+public int [][] fillPixels(int dx, int dy, int c) {
   int ra [][] = new int [dx][dy];
 
   for (int y = 0; y < dy; y++) {
@@ -149,12 +167,12 @@ int [][] fillPixels(int dx, int dy, color c) {
   return ra;
 }
 
-void movePixels(int cx, int cy, int dx, int dy, color c, int px, int py) {
+public void movePixels(int cx, int cy, int dx, int dy, int c, int px, int py) {
   drawPixels(copyPixels(getPastPixels(), cx, cy, dx, dy), px, py);
   drawPixels(fillPixels(dx, dy, c), cx, cy);
 }
 
-int [][] getPastPixels() {
+public int [][] getPastPixels() {
   int ra [][] = new int [height][width];
   loadPixels();
   for (int y = 0; y < height; y++) {
@@ -166,7 +184,7 @@ int [][] getPastPixels() {
 }
 
 
-int [][] slidePixels(int pastPixels[][], int lx, int rx, int ly, int ry) {
+public int [][] slidePixels(int pastPixels[][], int lx, int rx, int ly, int ry) {
   int [][] ra = new int[ry - ly][rx - lx];
   for (int y = ly; y < ry; y++) {
     for (int x = lx; x < rx; x++) {
@@ -178,7 +196,7 @@ int [][] slidePixels(int pastPixels[][], int lx, int rx, int ly, int ry) {
   return ra;
 }
 
-int [][] zoomPixels(int pastPixels[][], int lx, int rx, int ly, int ry, int w, int h) {
+public int [][] zoomPixels(int pastPixels[][], int lx, int rx, int ly, int ry, int w, int h) {
   int [][] ra = new int[h][w];
   for (int y = ly; y < ry; y++) {
     for (int x = lx; x < rx; x++) {
@@ -190,7 +208,7 @@ int [][] zoomPixels(int pastPixels[][], int lx, int rx, int ly, int ry, int w, i
   return ra;
 }
 
-void drawPixels(int pastPixels[][], int px, int py) {
+public void drawPixels(int pastPixels[][], int px, int py) {
   loadPixels();
   for (int y = 0; y < pastPixels.length; y++) {
     for (int x = 0; x < pastPixels[0].length; x++) {
@@ -202,4 +220,58 @@ void drawPixels(int pastPixels[][], int px, int py) {
     }
   }
   updatePixels();
+}
+class Movable{
+  int x, y, sx, sy, ex, ey;
+  boolean moveFlag;
+  int [][] sprite;
+
+  public void setSprite(int [][] _sprite){
+    sprite = new int[_sprite.length][_sprite[0].length];
+    for(int j = 0; j < _sprite.length; j++){
+      for(int i = 0; i < _sprite[0].length; i++){
+        sprite[j][i] = _sprite[j][i];
+      }
+    }
+  }
+
+  public void setTargetPos(int _ex, int _ey){
+    ex = _ex;
+    ey = _ey;
+    moveFlag = true;
+  }
+
+  public void moveManhattanStep(int _s){
+    for(int s = 0; s < _s; s++){
+      if((ex - x != 0) && (ey - y != 0)){
+        if(random(0, 100) > 50){
+          x += 1 * (ex - x) / abs(ex - x);
+        }else{
+          y += 1 * (ey - y) / abs(ey - y);
+        }
+      }
+      else if((ex - x == 0) && (ey - y != 0)){
+        y += 1 * (ey - y) / abs(ey - y);
+      } 
+      else if((ey - y == 0) && (ex - x != 0)){
+        x += 1 * (ex - x) / abs(ex - x);
+      }else{
+        moveFlag = false;
+        return;
+      }
+    }
+  }
+
+  public void show(){
+    drawPixels(sprite, x, y);
+  }
+}
+  static public void main(String[] passedArgs) {
+    String[] appletArgs = new String[] { "textEffect" };
+    if (passedArgs != null) {
+      PApplet.main(concat(appletArgs, passedArgs));
+    } else {
+      PApplet.main(appletArgs);
+    }
+  }
 }
