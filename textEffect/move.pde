@@ -38,7 +38,7 @@ class Movable{
   }
 
   void moveManhattanStep(int _s, int _block){
-    int minStep = 2;
+    int minStep = 1;
     if(_s < minStep) _s = minStep; 
     for(int s = 0; s < _s; s++){
       if(x == tx && y == ty){

@@ -14,6 +14,7 @@ void setup() {
   textAlign(CENTER, CENTER);
   textSize(charSize);
   colorMode(HSB, 360, 100, 100);
+  noStroke();
   for (int y = 0; y < height; y += charSize) {
     for (int x = 0; x < width; x += charSize) {
       fill(random(0, 360), 100, 100);
@@ -23,7 +24,7 @@ void setup() {
   colorMode(RGB, 256);
 
   loadPixels();
-  backgroundColor = pixels[0 * width + 0];
+  backgroundColor = pixels[0 * width + 0]; //initialize background color
 
   // drawPixels(copyPixelsAsRandomizedPattern(getPastPixels(), 0, 0, width/2, height/2, 4, 4), width/2, 0, color(255, 255, 255));
   // drawPixels(copyPixelsAsRandomizedPattern(getPastPixels(), 0, 0, width/2, height/2, 8, 8), 0, height/2, color(255, 255, 255));
@@ -56,7 +57,13 @@ void setup() {
 }
 
 void draw() {
-  background(color(255, 255, 255, 255));
+  // background(250);
+  // for(Movable tempmo : momos){  
+  //   if(tempmo.moveFlag == false){
+  //     fill(color(255,255,255,255));
+  //     rect(tempmo.x, tempmo.y, cellSize, cellSize);
+  //   }
+  // }
   for(Movable tempmo : momos){  
     // tempmo.moveManhattanStep(1, width/16); // static speed 
     // tempmo.moveManhattanStep(tempmo.initDistance / 50, width/8); // static speed based on initDistance (the farer, the faster)
