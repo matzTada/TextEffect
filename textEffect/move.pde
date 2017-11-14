@@ -1,5 +1,7 @@
 class Movable{
-  int x, y, ex, ey;
+  int x, y; // current position
+  int tx, ty; // target position
+  int ix, iy; // initial position 
   boolean moveFlag;
   int [][] sprite;
   int vx, vy;
@@ -19,39 +21,45 @@ class Movable{
     y =  _y;
   }
 
-  void setTargetPos(int _ex, int _ey){
-    ex = _ex;
-    ey = _ey;
-    initDistance = abs(ex - x) + abs (ey - y);
+  void setTargetPos(int _tx, int _ty){
+    tx = _tx;
+    ty = _ty;
+    initDistance = abs(tx - x) + abs (ty - y);
     moveFlag = true;
   }
 
+  void setInitPos(int _ix, int _iy){
+    ix = _ix;
+    iy = _iy;
+  }
+
   int getCurrentDistance(){
-    return abs(ex - x) + abs (ey - y);
+    return abs(tx - x) + abs (ty - y);
   }
 
   void moveManhattanStep(int _s, int _block){
-    if(_s < 1) _s = 1; 
+    int minStep = 2;
+    if(_s < minStep) _s = minStep; 
     for(int s = 0; s < _s; s++){
-      if(x == ex && y == ey){
+      if(x == tx && y == ty){
         moveFlag = false;
         return;
       }
-      else if(x == ex && y != ey){
+      else if(x == tx && y != ty){
         vx = 0;
-        vy = 1 * (ey - y) / abs(ey - y);       
+        vy = 1 * (ty - y) / abs(ty - y);       
       }
-      else if(x != ex && y == ey){
-        vx = 1 * (ex - x) / abs(ex - x);
+      else if(x != tx && y == ty){
+        vx = 1 * (tx - x) / abs(tx - x);
         vy = 0;
       }
       else if(x % _block == 0 || y % _block == 0){
         if(random(0, 100) > 50){
-          vx = 1 * (ex - x) / abs(ex - x);
+          vx = 1 * (tx - x) / abs(tx - x);
           vy = 0;
         }else{
           vx = 0;
-          vy = 1 * (ey - y) / abs(ey - y);
+          vy = 1 * (ty - y) / abs(ty - y);
         }
       }
 

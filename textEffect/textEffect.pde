@@ -1,33 +1,35 @@
 import java.util.*;
 
 ArrayList<Movable> momos = new ArrayList<Movable>();
+int cellSize;
+int backgroundColor;
 
 void setup() {
   size(400, 400);
+  colorMode(RGB, 256);
   background(color(255, 255, 255, 255));
 
-  int cellSize = width / 8;
+  int charSize = width / 8;
   int cnt = 0;
   textAlign(CENTER, CENTER);
-  textSize(cellSize);
+  textSize(charSize);
   colorMode(HSB, 360, 100, 100);
-  for (int y = 0; y < height; y += cellSize) {
-    for (int x = 0; x < width; x += cellSize) {
+  for (int y = 0; y < height; y += charSize) {
+    for (int x = 0; x < width; x += charSize) {
       fill(random(0, 360), 100, 100);
-      text("" + char('!' + cnt++), x + cellSize / 2, y + cellSize / 2);
+      text("" + char('!' + cnt++), x + charSize / 2, y + charSize / 2);
     }
   }
   colorMode(RGB, 256);
 
   loadPixels();
-  println(pixels[0 * width + 0]);
-  println(color(255,255,255,255));
+  backgroundColor = pixels[0 * width + 0];
 
   // drawPixels(copyPixelsAsRandomizedPattern(getPastPixels(), 0, 0, width/2, height/2, 4, 4), width/2, 0, color(255, 255, 255));
   // drawPixels(copyPixelsAsRandomizedPattern(getPastPixels(), 0, 0, width/2, height/2, 8, 8), 0, height/2, color(255, 255, 255));
   // drawPixels(copyPixelsAsRandomizedPattern(getPastPixels(), 0, 0, width/2, height/2, 16, 16), width/2, height/2, color(255, 255, 255));
 
-  cellSize = width / 16;
+  cellSize = charSize / 2;
 
   ArrayList<int []> poss = new ArrayList<int []>();
   for(int j = 0; j < height; j += cellSize){
@@ -45,6 +47,7 @@ void setup() {
 
       Movable tempmo = new Movable();
       tempmo.setSprite(copyPixels(getPastPixels(), i, j, cellSize, cellSize));
+      tempmo.setInitPos(i, j);
       tempmo.setCurrentPos(targetx, targety);
       tempmo.setTargetPos(i, j);
       momos.add(tempmo);
@@ -55,20 +58,41 @@ void setup() {
 void draw() {
   background(color(255, 255, 255, 255));
   for(Movable tempmo : momos){  
-    // tempmo.moveManhattanStep(1, width/16);
-    // tempmo.moveManhattanStep(tempmo.initDistance / 50, width/8);
-    tempmo.moveManhattanStep(tempmo.getCurrentDistance() / 100, width/16);
-    tempmo.show(color(255, 255, 255, 255));
+    // tempmo.moveManhattanStep(1, width/16); // static speed 
+    // tempmo.moveManhattanStep(tempmo.initDistance / 50, width/8); // static speed based on initDistance (the farer, the faster)
+    tempmo.moveManhattanStep(tempmo.getCurrentDistance() / 100, cellSize); // dynamic speed based on currentDistance (the farer, the faster)
+    tempmo.show(backgroundColor);
   }
 }
 
 void keyPressed() {  
   switch(key) {
-  case 's': //save current Image 
-    String saveImageFileName = year() + "_" + month() + "_" + day() + "_" +hour() + "_" +minute() + "_" +second() + ".jpg";
-    println("========== saved image: " + saveImageFileName + " ==========");
-    save(saveImageFileName); //save image for offline
-    break;
+    case 'i': // targeting initial position
+      for(Movable tempmo : momos){
+        tempmo.setTargetPos(tempmo.ix, tempmo.iy);
+      }
+      break;
+    case 'r': // shuffle (current position to target position)
+      ArrayList<int []> poss = new ArrayList<int []>();
+      for(int j = 0; j < height; j += cellSize){
+        for(int i = 0; i < width; i += cellSize){
+          poss.add(new int[]{i, j});
+        }
+      }
+      Collections.shuffle(poss);
+
+      for(Movable tempmo : momos){
+        int targetx = poss.get(poss.size()-1)[0];
+        int targety = poss.get(poss.size()-1)[1];
+        poss.remove(poss.size() - 1);
+        tempmo.setTargetPos(targetx, targety);
+      }
+      break;
+    case 's': // save current Image 
+      String saveImageFileName = year() + "_" + month() + "_" + day() + "_" +hour() + "_" +minute() + "_" +second() + ".jpg";
+      println("========== saved image: " + saveImageFileName + " ==========");
+      save(saveImageFileName); //save image for offline
+      break;
   }
 }
 
@@ -213,7 +237,7 @@ int [][] zoomPixels(int pastPixels[][], int lx, int rx, int ly, int ry, int w, i
   return ra;
 }
 
-void drawPixels(int pastPixels[][], int px, int py, color bgColor) {
+void drawPixels(int pastPixels[][], int px, int py, color _bgColor) {
   loadPixels();
   for (int y = 0; y < pastPixels.length; y++) {
     for (int x = 0; x < pastPixels[0].length; x++) {
@@ -221,7 +245,7 @@ void drawPixels(int pastPixels[][], int px, int py, color bgColor) {
       int tempY = y + py;
       if (tempX < 0 || width <= tempX) continue;
       if (tempY < 0 || height <= tempY) continue;
-      if(pastPixels[y][x] != -1){        
+      if(pastPixels[y][x] != _bgColor){        
         pixels[tempY * width + tempX] = pastPixels[y][x];
       }
     }
