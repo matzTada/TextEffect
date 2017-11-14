@@ -45,7 +45,7 @@ class Movable{
         vx = 1 * (ex - x) / abs(ex - x);
         vy = 0;
       }
-      else{
+      else if(x % _block == 0 || y % _block == 0){
         if(random(0, 100) > 50){
           vx = 1 * (ex - x) / abs(ex - x);
           vy = 0;
