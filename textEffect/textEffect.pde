@@ -1,8 +1,9 @@
 import java.util.*;
 
-ArrayList<Movable> momos = new ArrayList<Movable>();
 int cellSize;
 int backgroundColor;
+ArrayList<Movable> momos = new ArrayList<Movable>();
+Mosaic mosaic = new Mosaic();
 
 void setup() {
   size(400, 400);
@@ -54,9 +55,18 @@ void setup() {
       momos.add(tempmo);
     }
   }
+
+  // // for stamping
+  // background(250);
+  // for(Movable tempmo : momos){
+  //   tempmo.setCurrentPos(tempmo.ix, tempmo.iy);
+  // }
+  // mosaic.setSprites(momos);
+  // mosaic.initMosaic();
 }
 
 void draw() {
+  // for moving
   background(250);
   for(Movable tempmo : momos){  
     if(tempmo.moveFlag == false){
@@ -69,17 +79,24 @@ void draw() {
     // tempmo.moveManhattanStep(tempmo.initDistance / 50, width/8); // static speed based on initDistance (the farer, the faster)
     tempmo.moveManhattanStep(tempmo.getCurrentDistance() / 100, cellSize); // dynamic speed based on currentDistance (the farer, the faster)
     tempmo.show(backgroundColor);
+    // for(tempmo.moveFlag == false) tempmo.show(backgroundColor); // looks like stamping
   }
+
+  // // for stamping
+  // mosaic.stamp(backgroundColor);
+  // delay(10);
 }
 
 void keyPressed() {  
   switch(key) {
     case 'i': // targeting initial position
+      background(250);
       for(Movable tempmo : momos){
         tempmo.setTargetPos(tempmo.ix, tempmo.iy);
       }
       break;
     case 'r': // shuffle (current position to target position)
+      background(250);
       ArrayList<int []> poss = new ArrayList<int []>();
       for(int j = 0; j < height; j += cellSize){
         for(int i = 0; i < width; i += cellSize){

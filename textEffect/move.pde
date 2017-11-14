@@ -1,3 +1,27 @@
+class Mosaic{
+  ArrayList<Movable> sprites;
+  ArrayList<Integer> order;
+
+  void setSprites(ArrayList<Movable> _sprites){
+    sprites = _sprites;
+  }
+
+  void initMosaic(){
+    order = new ArrayList<Integer>();
+    for(int i = 0; i < sprites.size(); i ++){
+      order.add(i);
+    }
+    Collections.shuffle(order);
+  }
+
+  void stamp(color _bgColor){
+    if(order.size() > 0){
+      sprites.get(order.get(order.size() - 1)).show(_bgColor);
+      order.remove(order.size() - 1);
+    }
+  }
+}
+
 class Movable{
   int x, y; // current position
   int tx, ty; // target position
@@ -38,7 +62,7 @@ class Movable{
   }
 
   void moveManhattanStep(int _s, int _block){
-    int minStep = 1;
+    int minStep = 5;
     if(_s < minStep) _s = minStep; 
     for(int s = 0; s < _s; s++){
       if(x == tx && y == ty){

@@ -18,9 +18,10 @@ public class textEffect extends PApplet {
 
 
 
-ArrayList<Movable> momos = new ArrayList<Movable>();
 int cellSize;
 int backgroundColor;
+ArrayList<Movable> momos = new ArrayList<Movable>();
+Mosaic mosaic = new Mosaic();
 
 public void setup() {
   size(400, 400);
@@ -72,9 +73,18 @@ public void setup() {
       momos.add(tempmo);
     }
   }
+
+  // // for stamping
+  // background(250);
+  // for(Movable tempmo : momos){
+  //   tempmo.setCurrentPos(tempmo.ix, tempmo.iy);
+  // }
+  // mosaic.setSprites(momos);
+  // mosaic.initMosaic();
 }
 
 public void draw() {
+  // for moving
   background(250);
   for(Movable tempmo : momos){  
     if(tempmo.moveFlag == false){
@@ -85,19 +95,26 @@ public void draw() {
   for(Movable tempmo : momos){  
     // tempmo.moveManhattanStep(1, width/16); // static speed 
     // tempmo.moveManhattanStep(tempmo.initDistance / 50, width/8); // static speed based on initDistance (the farer, the faster)
-    tempmo.moveManhattanStep(tempmo.getCurrentDistance() / 100, 1); // dynamic speed based on currentDistance (the farer, the faster)
+    tempmo.moveManhattanStep(tempmo.getCurrentDistance() / 100, cellSize); // dynamic speed based on currentDistance (the farer, the faster)
     tempmo.show(backgroundColor);
+    // for(tempmo.moveFlag == false) tempmo.show(backgroundColor); // looks like stamping
   }
+
+  // // for stamping
+  // mosaic.stamp(backgroundColor);
+  // delay(10);
 }
 
 public void keyPressed() {  
   switch(key) {
     case 'i': // targeting initial position
+      background(250);
       for(Movable tempmo : momos){
         tempmo.setTargetPos(tempmo.ix, tempmo.iy);
       }
       break;
     case 'r': // shuffle (current position to target position)
+      background(250);
       ArrayList<int []> poss = new ArrayList<int []>();
       for(int j = 0; j < height; j += cellSize){
         for(int i = 0; i < width; i += cellSize){
@@ -277,6 +294,30 @@ public void drawPixels(int pastPixels[][], int px, int py, int _bgColor) {
   }
   updatePixels();
 }
+class Mosaic{
+  ArrayList<Movable> sprites;
+  ArrayList<Integer> order;
+
+  public void setSprites(ArrayList<Movable> _sprites){
+    sprites = _sprites;
+  }
+
+  public void initMosaic(){
+    order = new ArrayList<Integer>();
+    for(int i = 0; i < sprites.size(); i ++){
+      order.add(i);
+    }
+    Collections.shuffle(order);
+  }
+
+  public void stamp(int _bgColor){
+    if(order.size() > 0){
+      sprites.get(order.get(order.size() - 1)).show(_bgColor);
+      order.remove(order.size() - 1);
+    }
+  }
+}
+
 class Movable{
   int x, y; // current position
   int tx, ty; // target position
@@ -317,7 +358,7 @@ class Movable{
   }
 
   public void moveManhattanStep(int _s, int _block){
-    int minStep = 1;
+    int minStep = 5;
     if(_s < minStep) _s = minStep; 
     for(int s = 0; s < _s; s++){
       if(x == tx && y == ty){
