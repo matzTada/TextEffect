@@ -57,13 +57,13 @@ void setup() {
 }
 
 void draw() {
-  // background(250);
-  // for(Movable tempmo : momos){  
-  //   if(tempmo.moveFlag == false){
-  //     fill(color(255,255,255,255));
-  //     rect(tempmo.x, tempmo.y, cellSize, cellSize);
-  //   }
-  // }
+  background(250);
+  for(Movable tempmo : momos){  
+    if(tempmo.moveFlag == false){
+      fill(color(255,255,255,255));
+      rect(tempmo.x, tempmo.y, cellSize, cellSize);
+    }
+  }
   for(Movable tempmo : momos){  
     // tempmo.moveManhattanStep(1, width/16); // static speed 
     // tempmo.moveManhattanStep(tempmo.initDistance / 50, width/8); // static speed based on initDistance (the farer, the faster)
