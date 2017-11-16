@@ -7,6 +7,11 @@
 
 初音ミクの39ミュージックのPVみてて，文字がぐいいんって感じで変わるのとか作ってみたいなーって思って．<https://www.youtube.com/watch?v=OuLZlZ18APQ>
 
+## memo
+
+* 3次元にしてもいいよね
+* 回転させたり
+
 ## 参考
 
 * よっぱさんのページ<http://yoppa.org/geidai_media1_17/8243.html>
