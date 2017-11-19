@@ -3,6 +3,11 @@
 文字を変化させるいい感じのを作る  
 ピクセルをいじるイメージで作ってるので，
 
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=TpfjxLijs98
+" target="_blank"><img src="http://img.youtube.com/vi/TpfjxLijs98/0.jpg" 
+alt="movie on youtube" width=50% border="10" /></a>  
+[movie on youtube](https://www.youtube.com/watch?v=TpfjxLijs98)
+
 ## きっかけ
 
 初音ミクの39ミュージックのPVみてて，文字がぐいいんって感じで変わるのとか作ってみたいなーって思って．<https://www.youtube.com/watch?v=OuLZlZ18APQ>
